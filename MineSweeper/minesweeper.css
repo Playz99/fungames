@@ -66,8 +66,8 @@ body{
 #flag-button{
     width: 100px;
     height: 50px;
-    font-size: 30px;
-    background-color: lightgray;
+    font-size: 25px;
+    background-color: rgb(114, 114, 114);
     border: none;
 }
 #reset{

@@ -59,9 +59,11 @@ function setFlag(){
     if(flagEnabled){
         flagEnabled = false;
         document.getElementById("flag-button").style.backgroundColor = "lightgray";
+        document.getElementById("flag-button").innerText = "🚩 Off";
     }else{
         flagEnabled = true;
-        document.getElementById("flag-button").style.backgroundColor = "darkgray";
+        document.getElementById("flag-button").style.backgroundColor = "gray";
+        document.getElementById("flag-button").innerText = "🚩 On";
     }
 }
 
