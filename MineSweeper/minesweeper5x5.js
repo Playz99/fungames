@@ -5,11 +5,13 @@ var cols = 5;
 var minesRandom = Math.floor(Math.random() * rows * 2);
 var minesCount = minesRandom;
 var minesLocation = [];
+var flagRandom = 0;
 
 var tilesClicked = 0;
 var flagEnabled = false;
 
 var gameOver = false;
+var tiles;
 
 let mineAudio = new Audio("../MineSweeper/Audio/distant-explosion-47562.mp3");
 let mineMusic = new Audio("../MineSweeper/Audio/minesweepermusic.mp3");
@@ -35,6 +37,7 @@ function setMines(){
 
 function startGame(){
     document.getElementById("mines-count").innerText = minesCount;
+    document.getElementById("flag-count").innerText = flagRandom;
     document.getElementById("flag-button").addEventListener("click", setFlag);
     setMines();
 
@@ -49,7 +52,7 @@ function startGame(){
         }
         board.push(row);  
     }
-    console.log(board);  
+    console.log(board);   
 }
 
 function setFlag(){
@@ -73,8 +76,12 @@ function displayImage(){
     var image = document.body.appendChild(img);
 }
 
+function flagCounter(){
+    document.getElementById("flag-count").innerText = flagRandom;
+}
+
 function clickTile(){
-    if(gameOver || this.classList.contains("tile-clicked")){
+    if(gameOver){
         return;
     }
 
@@ -82,8 +89,12 @@ function clickTile(){
     if(flagEnabled){
         if(tile.innerText == ""){
             tile.innerText = "🚩";
+            flagRandom += 1;
+            flagCounter();
         }else if(tile.innerText == "🚩"){
             tile.innerText = "";
+            flagRandom -= 1;
+            flagCounter();
         }
         return;
     }
@@ -98,6 +109,7 @@ function clickTile(){
     let r = parseInt(coords[0]);
     let c = parseInt(coords[1]);
     checkMine(r,c);
+    let coord = r + "-" + c;
 }
 
 function revealMines(){
@@ -120,7 +132,7 @@ function checkMine(r, c){
         return;
     }
     if(board[r][c].classList.contains("tile-clicked")){
-            return;
+        return;
     }
 
     board[r][c].classList.add("tile-clicked");
@@ -142,8 +154,13 @@ function checkMine(r, c){
     minesFound += checkTile(r+1, c+1);  //bott right
 
     if(minesFound > 0){
+        if(board[r][c].innerText == "🚩"){
+            board[r][c].innerText == "";
+            flagRandom -= 1;
+            flagCounter();
+        }
         board[r][c].innerText = minesFound;
-        board[r][c].classList.add("x" + minesFound.toString()); 
+        board[r][c].classList.add("x" + minesFound.toString());
     }else{
         checkMine(r-1, c-1);  //top left
         checkMine(r-1, c);    //top
@@ -156,6 +173,7 @@ function checkMine(r, c){
         checkMine(r+1, c);    //bott
         checkMine(r+1, c+1);  //bott right
     }
+    
 
     if(tilesClicked == rows * cols - minesCount){
         document.getElementById("mines-count").innerText = "Cleared";

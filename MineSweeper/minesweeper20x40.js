@@ -5,6 +5,7 @@ var cols = 40;
 var minesRandom = Math.floor(Math.random() * rows * 4);
 var minesCount = minesRandom;
 var minesLocation = [];
+var flagRandom = 0;
 
 var tilesClicked = 0;
 var flagEnabled = false;
@@ -73,8 +74,12 @@ function displayImage(){
     var image = document.body.appendChild(img);
 }
 
+function flagCounter(){
+    document.getElementById("flag-count").innerText = flagRandom;
+}
+
 function clickTile(){
-    if(gameOver || this.classList.contains("tile-clicked")){
+    if(gameOver){
         return;
     }
 
@@ -82,8 +87,12 @@ function clickTile(){
     if(flagEnabled){
         if(tile.innerText == ""){
             tile.innerText = "🚩";
+            flagRandom += 1;
+            flagCounter();
         }else if(tile.innerText == "🚩"){
             tile.innerText = "";
+            flagRandom -= 1;
+            flagCounter();
         }
         return;
     }
@@ -98,6 +107,7 @@ function clickTile(){
     let r = parseInt(coords[0]);
     let c = parseInt(coords[1]);
     checkMine(r,c);
+    let coord = r + "-" + c;
 }
 
 function revealMines(){
@@ -142,6 +152,11 @@ function checkMine(r, c){
     minesFound += checkTile(r+1, c+1);  //bott right
 
     if(minesFound > 0){
+        if(board[r][c].innerText == "🚩"){
+            board[r][c].innerText == "";
+            flagRandom -= 1;
+            flagCounter();
+        }
         board[r][c].innerText = minesFound;
         board[r][c].classList.add("x" + minesFound.toString()); 
     }else{
