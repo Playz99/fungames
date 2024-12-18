@@ -16,6 +16,22 @@ let mineAudio = new Audio("../MineSweeper/Audio/distant-explosion-47562.mp3");
 let mineMusic = new Audio("../MineSweeper/Audio/minesweepermusic.mp3");
 mineMusic.loop = true;
 
+let timer = 30;
+const countdown = seconds => {
+    const interval = setInterval(() =>{
+        timer = (`${seconds}`);
+        seconds--;
+        document.getElementById("timer").innerText = seconds;
+        if(seconds < 0){
+            clearInterval(interval);
+            timer = 0;
+            gameOver = true;
+        }
+    }, 1000);
+};
+
+countdown(301);
+
 window.onload = function(){
     startGame();
 }
